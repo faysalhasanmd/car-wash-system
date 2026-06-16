@@ -1,20 +1,33 @@
-const { MongoClient, ServerApiVersion } = require("mongodb");
-const uri = process.env.NEXT_MONGO_URI;
-const dbName = process.env.NEXT_MONGODB_NAME;
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  },
-});
+import { MongoClient, ServerApiVersion } from "mongodb";
+
+let client;
+let clientPromise;
 
 export const dbConnect = async (collectionName) => {
   try {
-    const db = client.db(dbName);
+    if (!client) {
+      const uri = process.env.NEXT_MONGO_URI;
+      const dbName = process.env.NEXT_MONGODB_NAME;
+
+      if (!uri || !dbName) {
+        throw new Error("MongoDB env variables are not defined");
+      }
+
+      client = new MongoClient(uri, {
+        serverApi: {
+          version: ServerApiVersion.v1,
+          strict: true,
+          deprecationErrors: true,
+        },
+      });
+
+      await client.connect();
+    }
+
+    const db = client.db(process.env.NEXT_MONGODB_NAME);
     return db.collection(collectionName);
   } catch (e) {
-    console.log(e);
+    console.error("DB connection error:", e);
+    throw e;
   }
 };
