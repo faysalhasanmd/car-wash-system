@@ -2,7 +2,7 @@ import React from "react";
 
 const Dashboard = () => {
   return (
-    <div className="h-[1500px]">
+    <div className="">
       <h1>dashboard</h1>
     </div>
   );

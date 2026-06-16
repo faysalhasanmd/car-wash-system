@@ -100,8 +100,8 @@ const Footer = () => {
             </h3>
             <ul className="space-y-2.5 text-sm text-gray-400">
               <li>📍 Dhaka, Bangladesh</li>
-              <li>📞 +880 1700-000000</li>
-              <li>✉️ hello@carclean.com</li>
+              <li>📞 +880 1798484639</li>
+              <li>✉️ faysalhasanmd393@gmail.com</li>
               <li>⏰ Mon–Sat, 8am – 7pm</li>
             </ul>
           </div>

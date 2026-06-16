@@ -6,12 +6,13 @@ import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
 
 export const authOptions = {
-  // Configure one or more authentication providers
+  pages: {
+    signIn: "/login", // ✅ custom login page
+  },
+
   providers: [
     CredentialsProvider({
-      //   Sign in with {}
-      name: "Credentials <3",
-
+      name: "Credentials",
       credentials: {
         email: {
           label: "Email",
@@ -24,26 +25,20 @@ export const authOptions = {
           placeholder: "Your password",
         },
       },
-      async authorize(credentials, req) {
-        // Step 1: working with my DB to find user by email
-
+      async authorize(credentials) {
         console.log(credentials, "credentials");
 
         const userCollection = await dbConnect("users");
         const user = await userCollection.findOne({ email: credentials.email });
 
-        if (!user) {
-          return null;
-        }
+        if (!user) return null;
 
         const isPasswordValid = await bcrypt.compare(
           credentials.password,
           user.password,
         );
 
-        if (!isPasswordValid) {
-          return null;
-        }
+        if (!isPasswordValid) return null;
 
         return user;
       },
@@ -61,7 +56,7 @@ export const authOptions = {
   ],
 
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
+    async signIn({ user }) {
       const users = await dbConnect("users");
       const isUserExist = await users.findOne({ email: user.email });
       if (!isUserExist) {
@@ -72,19 +67,21 @@ export const authOptions = {
           role: "user",
         });
       }
-
       return true;
     },
+
     async redirect({ url, baseUrl }) {
       return baseUrl;
     },
-    async session({ session, token, user }) {
+
+    async session({ session, token }) {
       if (token?.role) {
         session.user.role = token.role;
       }
       return session;
     },
-    async jwt({ token, user, account, profile, isNewUser }) {
+
+    async jwt({ token, user }) {
       if (user?.role) {
         token.role = user.role;
       }
