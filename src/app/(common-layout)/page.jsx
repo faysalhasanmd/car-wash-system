@@ -120,7 +120,7 @@ const Counter = ({ value, suffix }) => {
   }, [inView, value]);
 
   return (
-    <p ref={ref} className="text-3xl font-bold">
+    <p ref={ref} className="text-2xl sm:text-3xl font-bold">
       {count}
       {suffix}
     </p>
@@ -154,9 +154,9 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div className="bg-white text-gray-900">
+    <div className="bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300">
       {/* ── Hero ── */}
-      <section className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-emerald-900 text-white overflow-hidden">
+      <section className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-emerald-950 text-white overflow-hidden">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_30%_50%,_#10b981_0%,_transparent_60%)]" />
 
         {/* floating blobs */}
@@ -166,7 +166,7 @@ const HomePage = () => {
           style={{ animationDelay: "1s" }}
         />
 
-        <div className="max-w-6xl mx-auto px-6 py-24 md:py-32 relative z-10">
+        <div className="max-w-6xl mx-auto px-6 py-20 md:py-32 relative z-10">
           <div className="max-w-2xl">
             <span
               className="inline-block text-emerald-400 text-sm font-semibold tracking-widest uppercase mb-4"
@@ -179,7 +179,7 @@ const HomePage = () => {
               Professional Car Care
             </span>
             <h1
-              className="text-4xl md:text-6xl font-bold leading-tight mb-6"
+              className="text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-6"
               style={{
                 opacity: heroVisible ? 1 : 0,
                 transform: heroVisible ? "translateY(0)" : "translateY(24px)",
@@ -191,7 +191,7 @@ const HomePage = () => {
               <span className="text-emerald-400"> the Best</span> Clean
             </h1>
             <p
-              className="text-gray-300 text-lg leading-relaxed mb-8 max-w-xl"
+              className="text-gray-300 text-base sm:text-lg leading-relaxed mb-8 max-w-xl"
               style={{
                 opacity: heroVisible ? 1 : 0,
                 transform: heroVisible ? "translateY(0)" : "translateY(24px)",
@@ -210,13 +210,13 @@ const HomePage = () => {
                   "opacity 0.7s ease 0.55s, transform 0.7s ease 0.55s",
               }}
             >
-              <Link href="/services">
-                <button className="px-7 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold rounded-xl transition-all text-sm hover:scale-105 active:scale-95">
+              <Link href="/services" className="w-full sm:w-auto">
+                <button className="w-full px-7 py-3.5 bg-emerald-500 hover:bg-emerald-400 text-white font-semibold rounded-xl transition-all text-sm hover:scale-105 active:scale-95">
                   Browse Services
                 </button>
               </Link>
-              <Link href="/aboutUs">
-                <button className="px-7 py-3.5 border border-white/20 hover:border-white/40 text-white font-medium rounded-xl transition-all text-sm hover:scale-105 active:scale-95">
+              <Link href="/aboutUs" className="w-full sm:w-auto">
+                <button className="w-full px-7 py-3.5 border border-white/20 hover:border-white/40 text-white font-medium rounded-xl transition-all text-sm hover:scale-105 active:scale-95">
                   Learn More
                 </button>
               </Link>
@@ -227,11 +227,13 @@ const HomePage = () => {
 
       {/* ── Stats Banner ── */}
       <section className="bg-emerald-600 text-white">
-        <div className="max-w-6xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+        <div className="max-w-6xl mx-auto px-6 py-8 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
           {stats.map(({ value, suffix, label }) => (
-            <div key={label}>
+            <div key={label} className="p-2">
               <Counter value={value} suffix={suffix} />
-              <p className="text-emerald-100 text-sm mt-1">{label}</p>
+              <p className="text-emerald-100 text-xs sm:text-sm mt-1">
+                {label}
+              </p>
             </div>
           ))}
         </div>
@@ -241,13 +243,13 @@ const HomePage = () => {
       <section className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
           <FadeIn className="text-center mb-12">
-            <span className="text-emerald-600 text-sm font-semibold tracking-widest uppercase">
+            <span className="text-emerald-600 dark:text-emerald-400 text-sm font-semibold tracking-widest uppercase">
               What We Offer
             </span>
             <h2 className="text-3xl md:text-4xl font-bold mt-2">
               Our Services
             </h2>
-            <p className="text-gray-500 mt-3 max-w-md mx-auto text-sm">
+            <p className="text-gray-500 dark:text-gray-400 mt-3 max-w-md mx-auto text-sm">
               From a quick wash to a full ceramic coating — we have every
               service your car needs.
             </p>
@@ -256,15 +258,19 @@ const HomePage = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             {services.map(({ icon, title, desc, price }, i) => (
               <FadeIn key={title} delay={i * 0.1}>
-                <div className="group border border-gray-100 rounded-2xl p-6 hover:border-emerald-200 hover:shadow-md hover:shadow-emerald-50 transition-all hover:-translate-y-1 cursor-pointer h-full">
-                  <div className="text-4xl mb-4 group-hover:scale-110 transition-transform inline-block">
-                    {icon}
+                <div className="group border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 rounded-2xl p-6 hover:border-emerald-200 dark:hover:border-emerald-800/60 hover:shadow-md hover:shadow-emerald-50/10 dark:hover:shadow-none transition-all hover:-translate-y-1 cursor-pointer h-full flex flex-col justify-between">
+                  <div>
+                    <div className="text-4xl mb-4 group-hover:scale-110 transition-transform inline-block">
+                      {icon}
+                    </div>
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                      {title}
+                    </h3>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-4">
+                      {desc}
+                    </p>
                   </div>
-                  <h3 className="font-semibold text-gray-900 mb-2">{title}</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed mb-4">
-                    {desc}
-                  </p>
-                  <p className="text-emerald-600 font-bold text-lg">
+                  <p className="text-emerald-600 dark:text-emerald-400 font-bold text-lg mt-2">
                     from {price}
                   </p>
                 </div>
@@ -272,7 +278,7 @@ const HomePage = () => {
             ))}
           </div>
 
-          <FadeIn className="text-center mt-10">
+          <FadeIn className="text-center mt-12">
             <Link href="/services">
               <button className="px-6 py-3 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium rounded-xl transition-all hover:scale-105 active:scale-95">
                 View All Services
@@ -283,10 +289,10 @@ const HomePage = () => {
       </section>
 
       {/* ── How It Works ── */}
-      <section className="py-20 px-6 bg-gray-50">
+      <section className="py-20 px-6 bg-gray-50 dark:bg-gray-900/40 border-y border-gray-100/80 dark:border-gray-900">
         <div className="max-w-6xl mx-auto">
           <FadeIn className="text-center mb-12">
-            <span className="text-emerald-600 text-sm font-semibold tracking-widest uppercase">
+            <span className="text-emerald-600 dark:text-emerald-400 text-sm font-semibold tracking-widest uppercase">
               Simple Process
             </span>
             <h2 className="text-3xl md:text-4xl font-bold mt-2">
@@ -297,11 +303,15 @@ const HomePage = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {steps.map(({ step, title, desc }, i) => (
               <FadeIn key={step} delay={i * 0.15} className="text-center">
-                <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-700 font-bold text-lg flex items-center justify-center mx-auto mb-5 hover:bg-emerald-200 hover:scale-110 transition-all">
+                <div className="w-14 h-14 rounded-full bg-emerald-100 dark:bg-emerald-950/50 text-emerald-700 dark:text-emerald-400 font-bold text-lg flex items-center justify-center mx-auto mb-5 hover:bg-emerald-200 dark:hover:bg-emerald-900/50 hover:scale-110 transition-all">
                   {step}
                 </div>
-                <h3 className="font-semibold text-lg mb-2">{title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{desc}</p>
+                <h3 className="font-semibold text-lg mb-2 text-gray-900 dark:text-gray-100">
+                  {title}
+                </h3>
+                <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed max-w-sm mx-auto">
+                  {desc}
+                </p>
               </FadeIn>
             ))}
           </div>
@@ -312,7 +322,7 @@ const HomePage = () => {
       <section className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
           <FadeIn className="text-center mb-12">
-            <span className="text-emerald-600 text-sm font-semibold tracking-widest uppercase">
+            <span className="text-emerald-600 dark:text-emerald-400 text-sm font-semibold tracking-widest uppercase">
               Customer Love
             </span>
             <h2 className="text-3xl md:text-4xl font-bold mt-2">
@@ -323,31 +333,38 @@ const HomePage = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map(({ name, role, text, rating }, i) => (
               <FadeIn key={name} delay={i * 0.12}>
-                <div className="border border-gray-100 rounded-2xl p-6 hover:border-emerald-100 hover:shadow-md transition-all hover:-translate-y-1 h-full">
-                  <div className="flex gap-0.5 mb-4">
-                    {[...Array(rating)].map((_, i) => (
-                      <span key={i} className="text-yellow-400 text-sm">
-                        ★
-                      </span>
-                    ))}
-                    {[...Array(5 - rating)].map((_, i) => (
-                      <span key={i} className="text-gray-200 text-sm">
-                        ★
-                      </span>
-                    ))}
+                <div className="border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 rounded-2xl p-6 hover:border-emerald-100 dark:hover:border-emerald-900/50 hover:shadow-md transition-all hover:-translate-y-1 h-full flex flex-col justify-between">
+                  <div>
+                    <div className="flex gap-0.5 mb-4">
+                      {[...Array(rating)].map((_, idx) => (
+                        <span key={idx} className="text-yellow-400 text-sm">
+                          ★
+                        </span>
+                      ))}
+                      {[...Array(5 - rating)].map((_, idx) => (
+                        <span
+                          key={idx}
+                          className="text-gray-200 dark:text-gray-700 text-sm"
+                        >
+                          ★
+                        </span>
+                      ))}
+                    </div>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-5 italic">
+                      "{text}"
+                    </p>
                   </div>
-                  <p className="text-gray-600 text-sm leading-relaxed mb-5">
-                    "{text}"
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-full bg-emerald-100 text-emerald-700 font-semibold text-sm flex items-center justify-center">
+                  <div className="flex items-center gap-3 pt-2">
+                    <div className="w-9 h-9 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 font-semibold text-sm flex items-center justify-center">
                       {name[0]}
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-gray-900">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
                         {name}
                       </p>
-                      <p className="text-xs text-gray-400">{role}</p>
+                      <p className="text-xs text-gray-400 dark:text-gray-500">
+                        {role}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -358,18 +375,18 @@ const HomePage = () => {
       </section>
 
       {/* ── CTA Banner ── */}
-      <section className="py-20 px-6 bg-emerald-600 text-white text-center">
+      <section className="py-20 px-6 bg-emerald-600 dark:bg-emerald-700 text-white text-center relative overflow-hidden">
         <FadeIn>
-          <div className="max-w-xl mx-auto">
+          <div className="max-w-xl mx-auto relative z-10">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
               Ready for a Spotless Car?
             </h2>
-            <p className="text-emerald-100 mb-8 text-sm leading-relaxed">
+            <p className="text-emerald-100 mb-8 text-sm sm:text-base leading-relaxed">
               Book a service today and let our experts take care of the rest. No
               hassle, just shine.
             </p>
-            <Link href="/services">
-              <button className="px-8 py-3.5 bg-white text-emerald-700 font-semibold rounded-xl hover:bg-emerald-50 transition-all text-sm hover:scale-105 active:scale-95">
+            <Link href="/services" className="inline-block w-full sm:w-auto">
+              <button className="w-full sm:w-auto px-8 py-3.5 bg-white text-emerald-700 font-semibold rounded-xl hover:bg-emerald-50 transition-all text-sm hover:scale-105 active:scale-95 shadow-lg shadow-emerald-800/20">
                 Book Now
               </button>
             </Link>

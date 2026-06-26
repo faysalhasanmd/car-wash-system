@@ -1,3 +1,4 @@
+// app/api/auth/[...nextauth]/route.js
 import { dbConnect } from "@/lib/dbConnect";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -7,27 +8,17 @@ import GitHubProvider from "next-auth/providers/github";
 
 export const authOptions = {
   pages: {
-    signIn: "/login", // ✅ custom login page
+    signIn: "/login",
   },
 
   providers: [
     CredentialsProvider({
       name: "Credentials",
       credentials: {
-        email: {
-          label: "Email",
-          type: "text",
-          placeholder: "jsmith@example.com",
-        },
-        password: {
-          label: "Password",
-          type: "password",
-          placeholder: "Your password",
-        },
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        console.log(credentials, "credentials");
-
         const userCollection = await dbConnect("users");
         const user = await userCollection.findOne({ email: credentials.email });
 
@@ -40,7 +31,14 @@ export const authOptions = {
 
         if (!isPasswordValid) return null;
 
-        return user;
+        // Return safe user object (no password)
+        return {
+          id: user._id.toString(),
+          name: user.name,
+          email: user.email,
+          image: user.image ?? user.photoURL ?? null,
+          role: user.role ?? "user",
+        };
       },
     }),
 
@@ -56,40 +54,69 @@ export const authOptions = {
   ],
 
   callbacks: {
-    async signIn({ user }) {
-      const users = await dbConnect("users");
-      const isUserExist = await users.findOne({ email: user.email });
-      if (!isUserExist) {
-        await users.insertOne({
-          name: user.name,
-          email: user.email,
-          image: user.image,
-          role: "user",
-        });
+    async signIn({ user, account }) {
+      // Only create DB record for OAuth providers
+      if (account?.provider !== "credentials") {
+        const users = await dbConnect("users");
+        const isUserExist = await users.findOne({ email: user.email });
+        if (!isUserExist) {
+          await users.insertOne({
+            name: user.name,
+            email: user.email,
+            image: user.image,
+            role: "user",
+          });
+        }
       }
       return true;
     },
 
     async redirect({ url, baseUrl }) {
-      return baseUrl;
+      // After sign-in, go to dashboard
+      if (url.startsWith(baseUrl)) return url;
+      return `${baseUrl}/dashboard`;
     },
 
     async session({ session, token }) {
-      if (token?.role) {
-        session.user.role = token.role;
+      if (token) {
+        session.user.id = token.id;
+        session.user.role = token.role ?? "user";
       }
       return session;
     },
 
-    async jwt({ token, user }) {
-      if (user?.role) {
-        token.role = user.role;
+    async jwt({ token, user, trigger, session }) {
+      // Initial sign-in
+      if (user) {
+        token.id = user.id;
+        token.role = user.role ?? "user";
       }
+
+      // Re-fetch role on every session access (keeps role fresh if admin changes it)
+      if (trigger === "update" && session) {
+        token.name = session.name ?? token.name;
+        token.picture = session.image ?? token.picture;
+      }
+
+      // Always sync role from DB so changes take effect without re-login
+      if (token.email && !user) {
+        try {
+          const users = await dbConnect("users");
+          const dbUser = await users.findOne({ email: token.email });
+          if (dbUser?.role) token.role = dbUser.role;
+        } catch {
+          // DB failure — keep existing role
+        }
+      }
+
       return token;
     },
+  },
+
+  session: {
+    strategy: "jwt",
   },
 };
 
 const handler = NextAuth(authOptions);
-
 export { handler as GET, handler as POST };

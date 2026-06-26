@@ -1,6 +1,7 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Providers from "@/lib/providers";
+import { ThemeProvider } from "@/app/providers/ThemeProvider";
 // import Navbar from "@/components/shared/Navbar";
 // import Footer from "@/components/shared/Footer";
 
@@ -24,12 +25,14 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
         suppressHydrationWarning={true}
+        className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       >
-        <Providers>{children}</Providers>
+        <ThemeProvider>
+          <Providers>{children}</Providers>
+        </ThemeProvider>
       </body>
     </html>
   );

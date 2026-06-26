@@ -1,21 +1,17 @@
 // app/dashboard/layout.jsx
 import DashboardSidebar from "@/components/shared/DashboardSidebar";
-import Navbar from "@/components/shared/Navbar";
+import DashboardNavbar from "@/components/shared/DashboardNavbar";
 
 const DashboardLayout = ({ children }) => {
   return (
-    <div>
-      {/* Navbar সবার উপরে */}
-      <Navbar />
+    <div className="min-h-screen bg-gray-50">
+      {/* Fixed Sidebar */}
+      <DashboardSidebar />
 
-      <div className="flex">
-        {/* Sidebar */}
-        <DashboardSidebar />
-
-        {/* Main content — sidebar width বাদ দিয়ে */}
-        <main className="ml-[220px] flex-1 min-h-screen bg-gray-50 p-6">
-          {children}
-        </main>
+      {/* Main area — offset by sidebar width */}
+      <div className="ml-[240px] flex flex-col min-h-screen">
+        <DashboardNavbar />
+        <main className="flex-1 p-6">{children}</main>
       </div>
     </div>
   );
