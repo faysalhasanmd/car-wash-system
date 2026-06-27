@@ -8,10 +8,11 @@ const DashboardLayout = ({ children }) => {
       {/* Fixed Sidebar */}
       <DashboardSidebar />
 
-      {/* Main area — offset by sidebar width */}
-      <div className="ml-[240px] flex flex-col min-h-screen">
+      {/* Main area — offset by sidebar width on desktop (lg+), 
+          top padding on mobile/tablet for the sidebar's mobile topbar */}
+      <div className="lg:ml-[240px] pt-14 lg:pt-0 flex flex-col min-h-screen">
         <DashboardNavbar />
-        <main className="flex-1 p-6">{children}</main>
+        <main className="flex-1 p-4 sm:p-6">{children}</main>
       </div>
     </div>
   );

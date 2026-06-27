@@ -94,13 +94,16 @@ const STATUS_STYLES = {
 };
 
 const StatCard = ({ icon: Icon, label, value, trend, color }) => (
-  <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm flex items-start gap-4">
-    <div className={`p-3 rounded-xl ${color}`}>
-      <Icon size={20} className="text-white" />
+  <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-sm flex items-start gap-3 sm:gap-4">
+    <div className={`p-2.5 sm:p-3 rounded-xl ${color} shrink-0`}>
+      <Icon size={18} className="text-white sm:hidden" />
+      <Icon size={20} className="text-white hidden sm:block" />
     </div>
     <div className="flex-1 min-w-0">
       <p className="text-xs text-gray-500 font-medium">{label}</p>
-      <p className="text-2xl font-bold text-gray-800 mt-0.5">{value}</p>
+      <p className="text-xl sm:text-2xl font-bold text-gray-800 mt-0.5">
+        {value}
+      </p>
       {trend && (
         <p className="text-xs text-emerald-600 font-medium mt-1">
           <TrendingUp size={11} className="inline mr-1" />
@@ -202,111 +205,122 @@ const DashboardPage = () => {
   const showCharts = role === "admin" || role === "manager";
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5 sm:space-y-6">
       <div>
-        <h1 className="text-xl font-bold text-gray-800">
+        <h1 className="text-lg sm:text-xl font-bold text-gray-800">
           Welcome back, {session?.user?.name?.split(" ")[0] ?? "User"} 👋
         </h1>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-xs sm:text-sm text-gray-500 mt-1">
           Here's what's happening with CarClean today.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
         {stats.map((s) => (
           <StatCard key={s.label} {...s} />
         ))}
       </div>
 
       {showCharts && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="lg:col-span-2 bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-sm">
             <h3 className="text-sm font-semibold text-gray-700 mb-4">
               Revenue & Bookings (2026)
             </h3>
-            <ResponsiveContainer width="100%" height={240}>
-              <BarChart data={monthlyRevenue} barGap={6}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-                <YAxis yAxisId="left" tick={{ fontSize: 11 }} />
-                <YAxis
-                  yAxisId="right"
-                  orientation="right"
-                  tick={{ fontSize: 11 }}
-                />
-                <Tooltip />
-                <Legend />
-                <Bar
-                  yAxisId="left"
-                  dataKey="revenue"
-                  name="Revenue (৳)"
-                  fill="#10b981"
-                  radius={[4, 4, 0, 0]}
-                />
-                <Bar
-                  yAxisId="right"
-                  dataKey="bookings"
-                  name="Bookings"
-                  fill="#3b82f6"
-                  radius={[4, 4, 0, 0]}
-                />
-              </BarChart>
-            </ResponsiveContainer>
+            <div className="h-[220px] sm:h-[260px] lg:h-[280px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={monthlyRevenue} barGap={6}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <XAxis dataKey="month" tick={{ fontSize: 11 }} />
+                  <YAxis yAxisId="left" tick={{ fontSize: 11 }} width={32} />
+                  <YAxis
+                    yAxisId="right"
+                    orientation="right"
+                    tick={{ fontSize: 11 }}
+                    width={32}
+                  />
+                  <Tooltip />
+                  <Legend wrapperStyle={{ fontSize: 12 }} />
+                  <Bar
+                    yAxisId="left"
+                    dataKey="revenue"
+                    name="Revenue (৳)"
+                    fill="#10b981"
+                    radius={[4, 4, 0, 0]}
+                  />
+                  <Bar
+                    yAxisId="right"
+                    dataKey="bookings"
+                    name="Bookings"
+                    fill="#3b82f6"
+                    radius={[4, 4, 0, 0]}
+                  />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
 
-          <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-sm">
             <h3 className="text-sm font-semibold text-gray-700 mb-4">
               Services Breakdown
             </h3>
-            <ResponsiveContainer width="100%" height={240}>
-              <PieChart>
-                <Pie
-                  data={serviceBreakdown}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={55}
-                  outerRadius={90}
-                  paddingAngle={4}
-                  dataKey="value"
-                >
-                  {serviceBreakdown.map((_, i) => (
-                    <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip />
-                <Legend iconType="circle" iconSize={8} />
-              </PieChart>
-            </ResponsiveContainer>
+            <div className="h-[220px] sm:h-[260px] lg:h-[280px]">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={serviceBreakdown}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={50}
+                    outerRadius={80}
+                    paddingAngle={4}
+                    dataKey="value"
+                  >
+                    {serviceBreakdown.map((_, i) => (
+                      <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                  <Legend
+                    iconType="circle"
+                    iconSize={8}
+                    wrapperStyle={{ fontSize: 12 }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
       )}
 
       {role === "user" && (
-        <div className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+        <div className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-sm">
           <h3 className="text-sm font-semibold text-gray-700 mb-4">
             My Spending History (৳)
           </h3>
-          <ResponsiveContainer width="100%" height={200}>
-            <LineChart data={monthlyRevenue}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-              <XAxis dataKey="month" tick={{ fontSize: 11 }} />
-              <YAxis tick={{ fontSize: 11 }} />
-              <Tooltip />
-              <Line
-                type="monotone"
-                dataKey="revenue"
-                name="Spent (৳)"
-                stroke="#10b981"
-                strokeWidth={2}
-                dot={{ r: 4, fill: "#10b981" }}
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <div className="h-[180px] sm:h-[200px]">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={monthlyRevenue}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis dataKey="month" tick={{ fontSize: 11 }} />
+                <YAxis tick={{ fontSize: 11 }} width={32} />
+                <Tooltip />
+                <Line
+                  type="monotone"
+                  dataKey="revenue"
+                  name="Spent (৳)"
+                  stroke="#10b981"
+                  strokeWidth={2}
+                  dot={{ r: 4, fill: "#10b981" }}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       )}
 
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-        <div className="px-5 py-4 border-b border-gray-100 flex items-center justify-between">
+        <div className="px-4 sm:px-5 py-3 sm:py-4 border-b border-gray-100 flex items-center justify-between">
           <h3 className="text-sm font-semibold text-gray-700">
             Recent Bookings
           </h3>
@@ -315,27 +329,27 @@ const DashboardPage = () => {
           </span>
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full text-sm min-w-[480px]">
             <thead>
               <tr className="bg-gray-50 border-b border-gray-100">
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-3 sm:px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                   ID
                 </th>
                 {(role === "admin" || role === "manager") && (
-                  <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                  <th className="text-left px-3 sm:px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                     Customer
                   </th>
                 )}
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-3 sm:px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                   Service
                 </th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-3 sm:px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                   Date
                 </th>
-                <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="text-left px-3 sm:px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="text-right px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
+                <th className="text-right px-3 sm:px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">
                   Amount
                 </th>
               </tr>
@@ -343,26 +357,28 @@ const DashboardPage = () => {
             <tbody className="divide-y divide-gray-50">
               {recentBookings.map((b) => (
                 <tr key={b.id} className="hover:bg-gray-50 transition-colors">
-                  <td className="px-5 py-3.5 font-mono text-xs text-gray-500">
+                  <td className="px-3 sm:px-5 py-3 sm:py-3.5 font-mono text-xs text-gray-500">
                     {b.id}
                   </td>
                   {(role === "admin" || role === "manager") && (
-                    <td className="px-5 py-3.5 font-medium text-gray-800">
+                    <td className="px-3 sm:px-5 py-3 sm:py-3.5 font-medium text-gray-800">
                       {b.customer}
                     </td>
                   )}
-                  <td className="px-5 py-3.5 text-gray-600">{b.service}</td>
-                  <td className="px-5 py-3.5 text-gray-500 text-xs">
+                  <td className="px-3 sm:px-5 py-3 sm:py-3.5 text-gray-600">
+                    {b.service}
+                  </td>
+                  <td className="px-3 sm:px-5 py-3 sm:py-3.5 text-gray-500 text-xs">
                     {b.date}
                   </td>
-                  <td className="px-5 py-3.5">
+                  <td className="px-3 sm:px-5 py-3 sm:py-3.5">
                     <span
                       className={`px-2 py-1 rounded-full text-xs font-semibold ${STATUS_STYLES[b.status]}`}
                     >
                       {b.status}
                     </span>
                   </td>
-                  <td className="px-5 py-3.5 text-right font-semibold text-gray-800">
+                  <td className="px-3 sm:px-5 py-3 sm:py-3.5 text-right font-semibold text-gray-800">
                     {b.amount}
                   </td>
                 </tr>

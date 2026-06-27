@@ -2,7 +2,7 @@
 
 export const signup = async (data) => {
   const res = await fetch(
-    `${process.env.NEXT_AUTH_URL || "http://localhost:3000"}/api/users`,
+    `${process.env.NEXTAUTH_URL || "https://car-wash-system-two.vercel.app"}/api/users`,
     {
       method: "POST",
       headers: {
