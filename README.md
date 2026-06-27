@@ -51,7 +51,7 @@ A modern car washing and detailing web application built for a Bangladesh-based 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/faysalhasanmd/car-cleanify.git
+git clone https://github.com/faysalhasanmd/car-wash-system.git
 cd car-cleanify
 ```
 
