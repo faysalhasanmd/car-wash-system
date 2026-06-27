@@ -20,7 +20,7 @@ A modern car washing and detailing web application built for a Bangladesh-based 
 
 ## 🌐 GitHub Link
 
-[https://github.com/faysalhasanmd/car-cleanify](https://github.com/faysalhasanmd/car-cleanify)
+[https://github.com/faysalhasanmd/car-wash-system](https://github.com/faysalhasanmd/car-wash-system)
 
 ---
 
