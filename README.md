@@ -1,38 +1,48 @@
 # 🚗 CarClean — Professional Car Wash & Detailing Service
 
-A modern car washing and detailing web application built for a Bangladesh-based business. Customers can browse services, book appointments, and leave reviews — all in one place.
+A modern car washing and detailing web application built for a Bangladesh-based business. Customers can browse services, book appointments, and leave reviews — while admins and managers run the business through a full role-based dashboard.
 
 ![CarClean](https://img.freepik.com/premium-vector/vector-car-logo-design_714931-342.jpg?w=200)
 
 ## 🌐 Live Demo
 
-[https://car-cleanify-d55d.vercel.app](https://car-cleanify-d55d.vercel.app)
+[https://car-wash-system-two.vercel.app](https://car-wash-system-two.vercel.app)
+
+### 🔑 Demo Credentials
+
+| Role    | Email              | Password |
+| ------- | ------------------ | -------- |
+| User    | newEmail@gmail.com | 123456   |
+| Admin   | JohnDue@gmail.com  | 123456   |
+| Manager | mazidur@gmail.com  | 123456   |
 
 ---
 
-## 🌐 gitHub Link
+## 🌐 GitHub Link
 
-[https://github.com/faysalhasanmd/car-cleanify]
+[https://github.com/faysalhasanmd/car-cleanify](https://github.com/faysalhasanmd/car-cleanify)
+
+---
 
 ## ✨ Features
 
 - 🔐 Authentication with NextAuth (Credentials, Google, GitHub)
-- 🛡️ Protected routes
+- 🛡️ Role-Based Access Control (Admin, Manager, User) with protected routes
 - 📋 Browse & book car washing services
 - ⭐ Customer reviews section
-- 👤 User & Admin dashboard
-- 📱 Fully responsive design
+- 📊 Role-aware dashboard with stats cards & Recharts visualizations (revenue, bookings, service breakdown)
+- 👥 Admin user management & role assignment
+- 📱 Fully responsive design — mobile hamburger sidebar, tablet & desktop layouts
 - 🌙 Toast notifications & loading states
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Frontend        | Backend            | Database | Auth        |
-| --------------- | ------------------ | -------- | ----------- |
-| Next.js 15      | Next.js API Routes | MongoDB  | NextAuth.js |
-| Tailwind CSS    | Node.js            | Mongoose | JWT         |
-| React Hot Toast | bcrypt             | —        | —           |
+| Frontend     | Backend            | Database                         | Auth        |
+| ------------ | ------------------ | -------------------------------- | ----------- |
+| Next.js 15   | Next.js API Routes | MongoDB                          | NextAuth.js |
+| Tailwind CSS | Node.js            | Mongoose / MongoDB Native Driver |
 
 ---
 
@@ -62,6 +72,8 @@ NEXTAUTH_SECRET=your_random_secret
 NEXTAUTH_URL=http://localhost:3000
 ```
 
+> ⚠️ When deploying (e.g. to Vercel), make sure `NEXTAUTH_URL` is set to your **production domain**, not `localhost`, or authentication will fail in production.
+
 ### 4. Run the development server
 
 ```bash
@@ -73,3 +85,54 @@ Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 ---
 
 ## 📁 Project Structure
+
+```
+car-cleanify/
+├── app/
+│   ├── (dashboard-layout)/
+│   │   └── dashboard/
+│   │       ├── layout.jsx          # Sidebar + Navbar wrapper
+│   │       ├── page.jsx            # Role-aware overview (stats + charts)
+│   │       ├── profile/
+│   │       ├── bookings/
+│   │       ├── my-bookings/
+│   │       ├── services/
+│   │       ├── reports/
+│   │       ├── reviews/
+│   │       ├── users/               # Admin only
+│   │       ├── roles/               # Admin only
+│   │       └── settings/            # Admin only
+│   ├── api/
+│   │   ├── auth/
+│   │   │   └── [...nextauth]/
+│   │   ├── bookings/
+│   │   ├── services/
+│   │   ├── reviews/
+│   │   └── users/
+│   ├── login/
+│   ├── register/
+│   └── page.jsx                     # Public landing page
+├── components/
+│   ├── shared/
+│   │   ├── DashboardSidebar.jsx     # Role-based nav, mobile hamburger
+│   │   └── DashboardNavbar.jsx
+│   └── ui/
+├── lib/
+│   └── mongodb.js                   # DB connection helper
+├── models/                          # Mongoose schemas (if used)
+├── public/
+├── .env.local
+├── next.config.mjs
+├── package.json
+└── README.md
+```
+
+---
+
+## 👥 Roles & Permissions
+
+| Role    | Access                                                                   |
+| ------- | ------------------------------------------------------------------------ |
+| Admin   | Full access — manage users, services, bookings, roles, reports, settings |
+| Manager | Manage bookings, services, reports, reviews                              |
+| User    | Book services, view own bookings, leave reviews, manage own profile      |
