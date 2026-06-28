@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import {
   Sparkles,
@@ -9,9 +9,10 @@ import {
   ChevronRight,
   Info,
   X,
+  Sun,
+  Moon,
 } from "lucide-react";
 
-// হার্ডকোডেড বিস্তারিত সার্ভিস ডাটা
 const allServices = [
   {
     id: "ser-1",
@@ -90,6 +91,24 @@ const allServices = [
 const ServicesPage = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedService, setSelectedService] = useState(null);
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("theme");
+    const prefersDark =
+      stored === "dark" ||
+      (!stored && window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+    document.documentElement.classList.toggle("dark", prefersDark);
+    setIsDark(prefersDark);
+  }, []);
+
+  const toggleTheme = () => {
+    const next = !isDark;
+    setIsDark(next);
+    document.documentElement.classList.toggle("dark", next);
+    localStorage.setItem("theme", next ? "dark" : "light");
+  };
 
   // ক্যাটাগরি ফিল্টারিং
   const filteredServices = allServices.filter((s) =>
@@ -100,6 +119,16 @@ const ServicesPage = () => {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 transition-colors duration-300 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mx-auto">
         {/* Header Section */}
+        <div className="flex justify-end max-w-2xl mx-auto mb-2">
+          <button
+            onClick={toggleTheme}
+            className="p-2.5 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-500 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+            title="Toggle theme"
+          >
+            {isDark ? <Sun size={18} /> : <Moon size={18} />}
+          </button>
+        </div>
+
         <div className="text-center max-w-2xl mx-auto mb-12">
           <span className="text-emerald-600 dark:text-emerald-400 text-xs font-bold tracking-widest uppercase bg-emerald-50 dark:bg-emerald-950/40 px-3 py-1.5 rounded-full">
             Our Menu

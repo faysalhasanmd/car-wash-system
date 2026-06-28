@@ -20,6 +20,7 @@ const ROLE_BADGE = {
 const DashboardNavbar = ({ title = "Dashboard" }) => {
   const { data: session } = useSession();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
   const dropdownRef = useRef(null);
 
   const role = session?.user?.role ?? "user";
@@ -34,6 +35,18 @@ const DashboardNavbar = ({ title = "Dashboard" }) => {
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
+
+  // ✅ Fix: redirect callback bypass করে নিজে hard-navigate করছি
+  const handleSignOut = async () => {
+    try {
+      setSigningOut(true);
+      await signOut({ redirect: false });
+      window.location.href = "/login";
+    } catch (err) {
+      console.error("Sign out failed:", err);
+      setSigningOut(false);
+    }
+  };
 
   return (
     <header className="h-[64px] bg-white border-b border-gray-100 flex items-center justify-between px-6 sticky top-0 z-40 shadow-sm">
@@ -124,11 +137,12 @@ const DashboardNavbar = ({ title = "Dashboard" }) => {
 
               <div className="border-t border-gray-100 pt-1">
                 <button
-                  onClick={() => signOut({ callbackUrl: "/login" })}
-                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors"
+                  onClick={handleSignOut}
+                  disabled={signingOut}
+                  className="w-full flex items-center gap-3 px-4 py-2 text-sm text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <LogOut size={14} />
-                  Sign Out
+                  {signingOut ? "Signing out..." : "Sign Out"}
                 </button>
               </div>
             </div>

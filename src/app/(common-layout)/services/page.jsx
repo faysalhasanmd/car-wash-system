@@ -30,13 +30,16 @@ const ServicePage = async ({ searchParams }) => {
   const services = allData?.data || [];
 
   return (
-    <div className="bg-slate-50 min-h-screen w-full mx-auto py-16 px-4 sm:px-6 lg:px-8">
+    <div className="bg-slate-50 dark:bg-gray-950 min-h-screen w-full mx-auto py-16 px-4 sm:px-6 lg:px-8 transition-colors duration-300">
       {/* Header Section */}
       <div className="max-w-7xl mx-auto text-center mb-16">
-        <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 sm:text-5xl">
-          Our <span className="text-blue-600">Car Care Services</span>
+        <h1 className="text-4xl font-extrabold tracking-tight text-slate-900 dark:text-gray-100 sm:text-5xl">
+          Our{" "}
+          <span className="text-blue-600 dark:text-emerald-400">
+            Car Care Services
+          </span>
         </h1>
-        <p className="mt-4 text-lg sm:text-xl text-slate-500 max-w-2xl mx-auto font-normal">
+        <p className="mt-4 text-lg sm:text-xl text-slate-500 dark:text-gray-400 max-w-2xl mx-auto font-normal">
           Give your vehicle the professional treatment it deserves. Choose from
           our wide range of expert washing and detailing services.
         </p>

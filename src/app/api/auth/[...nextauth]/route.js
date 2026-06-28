@@ -74,7 +74,7 @@ export const authOptions = {
     async redirect({ url, baseUrl }) {
       // After sign-in, go to dashboard
       if (url.startsWith(baseUrl)) return url;
-      return `${baseUrl}/dashboard`;
+      return `${baseUrl}/login`;
     },
 
     async session({ session, token }) {
