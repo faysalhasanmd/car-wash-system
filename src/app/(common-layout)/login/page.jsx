@@ -2,12 +2,40 @@
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
+
+const DEMO_EMAIL = "demo@example.com";
+const DEMO_PASSWORD = "demo1234";
 
 const LoginPage = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+
+  const handleDemoLogin = async () => {
+    if (emailRef.current) emailRef.current.value = DEMO_EMAIL;
+    if (passwordRef.current) passwordRef.current.value = DEMO_PASSWORD;
+
+    toast.loading("Logging in as demo user...", { id: "demo" });
+    setLoading(true);
+
+    const result = await signIn("credentials", {
+      email: DEMO_EMAIL,
+      password: DEMO_PASSWORD,
+      redirect: false,
+    });
+
+    setLoading(false);
+
+    if (result?.ok) {
+      toast.success("Demo login successful!", { id: "demo" });
+      setTimeout(() => router.push("/dashboard"), 1000);
+    } else {
+      toast.error("Demo login failed. Check DB.", { id: "demo" });
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,13 +43,11 @@ const LoginPage = () => {
     const password = e.target.password.value;
 
     setLoading(true);
-
     const result = await signIn("credentials", {
       email,
       password,
       redirect: false,
     });
-
     setLoading(false);
 
     if (result?.ok) {
@@ -44,12 +70,30 @@ const LoginPage = () => {
           <p className="text-slate-500 mt-2 text-sm">Sign in to your account</p>
         </div>
 
+        {/* Demo Login Button */}
+        <button
+          type="button"
+          onClick={handleDemoLogin}
+          disabled={loading}
+          className="w-full mb-6 bg-amber-50 hover:bg-amber-100 disabled:opacity-50 border border-amber-300 text-amber-700 font-semibold py-2.5 rounded-xl text-sm transition flex items-center justify-center gap-2"
+        >
+          ⚡ Login as Demo User
+        </button>
+
+        {/* Divider */}
+        <div className="flex items-center gap-3 mb-5">
+          <div className="flex-1 h-px bg-slate-200" />
+          <span className="text-xs text-slate-400">or sign in manually</span>
+          <div className="flex-1 h-px bg-slate-200" />
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">
               Email Address
             </label>
             <input
+              ref={emailRef}
               type="email"
               name="email"
               required
@@ -68,6 +112,7 @@ const LoginPage = () => {
               </a>
             </div>
             <input
+              ref={passwordRef}
               type="password"
               name="password"
               required
@@ -91,27 +136,6 @@ const LoginPage = () => {
             )}
           </button>
         </form>
-
-        <div className="mt-4 space-y-2">
-          <button
-            onClick={() => {
-              toast.loading("Redirecting to Google...", { duration: 2000 });
-              signIn("google", { callbackUrl: "/dashboard" });
-            }}
-            className="w-full border border-slate-200 text-slate-700 font-medium py-2.5 rounded-xl text-sm hover:bg-slate-50 transition"
-          >
-            Continue with Google
-          </button>
-          <button
-            onClick={() => {
-              toast.loading("Redirecting to GitHub...", { duration: 2000 });
-              signIn("github", { callbackUrl: "/dashboard" });
-            }}
-            className="w-full border border-slate-200 text-slate-700 font-medium py-2.5 rounded-xl text-sm hover:bg-slate-50 transition"
-          >
-            Continue with GitHub
-          </button>
-        </div>
 
         <p className="text-center text-sm text-slate-500 mt-6">
           Don't have an account?{" "}
