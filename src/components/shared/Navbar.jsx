@@ -15,7 +15,6 @@ const Navbar = () => {
 
   const role = session?.user?.role; // "admin" | "manager" | "user" | undefined
 
-  // ✅ Public links — visible to EVERYONE (guest, user, manager, admin)
   const publicLinks = [
     { href: "/", label: "Home" },
     { href: "/services", label: "Services" },
@@ -25,7 +24,6 @@ const Navbar = () => {
     { href: "/aboutUs", label: "About Us" },
   ];
 
-  // ✅ Role-based extra links
   const roleLinks = {
     user: [
       { href: "/add-service", label: "Add Service" },
