@@ -20,7 +20,6 @@ import {
   Globe,
 } from "lucide-react";
 
-// ─── Role-based dashboard nav config ──────────────────────────────────────────
 const NAV_CONFIG = {
   user: [
     { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
@@ -54,7 +53,6 @@ const NAV_CONFIG = {
   ],
 };
 
-// ─── Main site nav config (same routes as the public Navbar) ─────────────────
 const SITE_PUBLIC_LINKS = [
   { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
@@ -68,11 +66,11 @@ const SITE_ROLE_LINKS = {
   user: [{ href: "/add-service", label: "Add Service" }],
   manager: [
     { href: "/add-service", label: "Add Service" },
-    { href: "/dashboard/bookings", label: "All Bookings" },
+    { href: "/dashboard/bookings", label: "All Booking" },
   ],
   admin: [
     { href: "/add-service", label: "Add Service" },
-    { href: "/dashboard/bookings", label: "All Bookings" },
+    { href: "/dashboard/bookings", label: "All Booking" },
     { href: "/dashboard/users", label: "Manage Users" },
   ],
 };
@@ -112,7 +110,6 @@ const DashboardSidebar = () => {
 
   return (
     <>
-      {/* ── Mobile / Tablet top bar (hidden on lg+) ────────────────────── */}
       <div className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-white border-b border-gray-100 flex items-center justify-between px-4 z-50">
         <Link href="/" className="flex items-center gap-2">
           <img
@@ -126,7 +123,6 @@ const DashboardSidebar = () => {
         </Link>
 
         <div className="flex items-center gap-1">
-          {/* ── NEW: Site routes dropdown trigger ── */}
           <div className="relative" ref={siteNavRef}>
             <button
               onClick={() => setSiteNavOpen((v) => !v)}
@@ -138,7 +134,6 @@ const DashboardSidebar = () => {
 
             {siteNavOpen && (
               <div className="absolute right-0 top-full mt-3 w-64 max-w-[85vw] bg-white rounded-2xl border border-gray-100 shadow-2xl ring-1 ring-black/5 z-50 overflow-hidden animate-in fade-in slide-in-from-top-1 duration-150">
-                {/* Caret pointing up to the trigger button */}
                 <span className="absolute -top-1.5 right-4 w-3 h-3 bg-white border-l border-t border-gray-100 rotate-45" />
 
                 <div className="px-4 py-2.5 border-b border-gray-100 flex items-center gap-2">
@@ -167,7 +162,6 @@ const DashboardSidebar = () => {
             )}
           </div>
 
-          {/* ── Existing: Sidebar drawer trigger ── */}
           <button
             onClick={() => setIsOpen(true)}
             aria-label="Open menu"
@@ -178,7 +172,6 @@ const DashboardSidebar = () => {
         </div>
       </div>
 
-      {/* ── Backdrop overlay (mobile/tablet only, shown when sidebar open) ── */}
       {isOpen && (
         <div
           className="lg:hidden fixed inset-0 bg-black/40 z-50"
@@ -186,7 +179,6 @@ const DashboardSidebar = () => {
         />
       )}
 
-      {/* ── Sidebar ─────────────────────────────────────────────────────── */}
       <aside
         className={`w-[260px] sm:w-[240px] h-screen bg-white border-r border-gray-100 fixed left-0 top-0 flex flex-col shadow-sm z-50
         transform transition-transform duration-300 ease-in-out
