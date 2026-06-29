@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
@@ -17,9 +17,10 @@ import {
   Bell,
   Menu,
   X,
+  Globe,
 } from "lucide-react";
 
-// ─── Role-based nav config ────────────────────────────────────────────────────
+// ─── Role-based dashboard nav config ──────────────────────────────────────────
 const NAV_CONFIG = {
   user: [
     { href: "/dashboard", label: "Overview", icon: LayoutDashboard },
@@ -53,6 +54,29 @@ const NAV_CONFIG = {
   ],
 };
 
+// ─── Main site nav config (same routes as the public Navbar) ─────────────────
+const SITE_PUBLIC_LINKS = [
+  { href: "/", label: "Home" },
+  { href: "/services", label: "Services" },
+  { href: "/review", label: "Reviews" },
+  { href: "/blog", label: "Blog" },
+  { href: "/contact", label: "Contact" },
+  { href: "/aboutUs", label: "About Us" },
+];
+
+const SITE_ROLE_LINKS = {
+  user: [{ href: "/add-service", label: "Add Service" }],
+  manager: [
+    { href: "/add-service", label: "Add Service" },
+    { href: "/dashboard/bookings", label: "All Bookings" },
+  ],
+  admin: [
+    { href: "/add-service", label: "Add Service" },
+    { href: "/dashboard/bookings", label: "All Bookings" },
+    { href: "/dashboard/users", label: "Manage Users" },
+  ],
+};
+
 const ROLE_BADGE = {
   admin: { label: "Admin", color: "bg-red-100 text-red-700" },
   manager: { label: "Manager", color: "bg-blue-100 text-blue-700" },
@@ -62,19 +86,34 @@ const ROLE_BADGE = {
 const DashboardSidebar = () => {
   const pathname = usePathname();
   const { data: session } = useSession();
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false); // sidebar drawer
+  const [siteNavOpen, setSiteNavOpen] = useState(false); // new: site routes dropdown
+  const siteNavRef = useRef(null);
 
   const role = session?.user?.role ?? "user";
   const navItems = NAV_CONFIG[role] ?? NAV_CONFIG.user;
   const badge = ROLE_BADGE[role] ?? ROLE_BADGE.user;
 
+  const siteLinks = [...SITE_PUBLIC_LINKS, ...(SITE_ROLE_LINKS[role] ?? [])];
+
   const isActive = (href) =>
     href === "/dashboard" ? pathname === href : pathname?.startsWith(href);
+
+  // Close the site-nav dropdown on outside click
+  useEffect(() => {
+    const handler = (e) => {
+      if (siteNavRef.current && !siteNavRef.current.contains(e.target)) {
+        setSiteNavOpen(false);
+      }
+    };
+    if (siteNavOpen) document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [siteNavOpen]);
 
   return (
     <>
       {/* ── Mobile / Tablet top bar (hidden on lg+) ────────────────────── */}
-      <div className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-white border-b border-gray-100 flex items-center justify-between px-4 z-40">
+      <div className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-white border-b border-gray-100 flex items-center justify-between px-4 z-50">
         <Link href="/" className="flex items-center gap-2">
           <img
             src="https://img.freepik.com/premium-vector/vector-car-logo-design_714931-342.jpg?semt=ais_hybrid&w=740&q=80"
@@ -85,13 +124,58 @@ const DashboardSidebar = () => {
             CarClean
           </span>
         </Link>
-        <button
-          onClick={() => setIsOpen(true)}
-          aria-label="Open menu"
-          className="p-2 rounded-lg hover:bg-gray-50 active:bg-gray-100"
-        >
-          <Menu size={22} className="text-gray-700" />
-        </button>
+
+        <div className="flex items-center gap-1">
+          {/* ── NEW: Site routes dropdown trigger ── */}
+          <div className="relative" ref={siteNavRef}>
+            <button
+              onClick={() => setSiteNavOpen((v) => !v)}
+              aria-label="Open site navigation"
+              className="p-2 rounded-lg hover:bg-gray-50 active:bg-gray-100"
+            >
+              <Globe size={20} className="text-gray-700" />
+            </button>
+
+            {siteNavOpen && (
+              <div className="absolute right-0 top-full mt-3 w-64 max-w-[85vw] bg-white rounded-2xl border border-gray-100 shadow-2xl ring-1 ring-black/5 z-50 overflow-hidden animate-in fade-in slide-in-from-top-1 duration-150">
+                {/* Caret pointing up to the trigger button */}
+                <span className="absolute -top-1.5 right-4 w-3 h-3 bg-white border-l border-t border-gray-100 rotate-45" />
+
+                <div className="px-4 py-2.5 border-b border-gray-100 flex items-center gap-2">
+                  <Globe size={13} className="text-emerald-500" />
+                  <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
+                    Site Pages
+                  </span>
+                </div>
+                <div className="max-h-[60vh] overflow-y-auto py-1.5">
+                  {siteLinks.map(({ href, label }) => (
+                    <Link
+                      key={href}
+                      href={href}
+                      onClick={() => setSiteNavOpen(false)}
+                      className={`block px-4 py-2.5 text-sm font-medium transition-colors ${
+                        isActive(href)
+                          ? "text-emerald-600 bg-emerald-50 font-semibold"
+                          : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                      }`}
+                    >
+                      {label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* ── Existing: Sidebar drawer trigger ── */}
+          <button
+            onClick={() => setIsOpen(true)}
+            aria-label="Open menu"
+            className="p-2 rounded-lg hover:bg-gray-50 active:bg-gray-100"
+          >
+            <Menu size={22} className="text-gray-700" />
+          </button>
+        </div>
       </div>
 
       {/* ── Backdrop overlay (mobile/tablet only, shown when sidebar open) ── */}
